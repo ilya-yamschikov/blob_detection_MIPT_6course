@@ -1,0 +1,6 @@
+function draw_image(img, title)
+    imagesc(img);
+    colormap(gray);
+    axis([0 size(img,1) 0 size(img, 2)]);
+    axis off
+end
