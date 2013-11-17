@@ -1,0 +1,29 @@
+BLOBS_COUNT = 10;
+MESH_SIZE = 1024;
+
+mkdir('test_samples')
+
+Z = zeros(MESH_SIZE, MESH_SIZE);
+[X, Y] = meshgrid(1:MESH_SIZE);
+blob = zeros(MESH_SIZE, MESH_SIZE);
+
+for iteration = 1:BLOBS_COUNT
+    intensity = random('unif', 0.5, 1);
+    center = random('unid', MESH_SIZE, 1, 2);
+    sigma = random('unif', MESH_SIZE/75, MESH_SIZE/10);
+    blob = intensity * exp(- ((X-center(1)).^2 + (Y-center(2)).^2) / (2 * sigma^2));
+    
+    Z = Z + blob;
+end
+
+min_intensity = min(Z(:));
+max_intensity = max(Z(:));
+Z = (Z - min_intensity) / (max_intensity - min_intensity);
+
+%h = figure;
+%pic = mesh(X, Y, Z);
+%colormap(gray(256));
+%view(2);
+%axis([0 MESH_SIZE 0 MESH_SIZE]);
+%axis off
+%saveas(pic, 'test_samples\sample1.png', 'png');
