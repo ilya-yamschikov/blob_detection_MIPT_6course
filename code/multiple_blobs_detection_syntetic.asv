@@ -6,6 +6,8 @@ tStart = tic;
 
 %[img centers radiuses] = generate_sample(IMAGE_SIZE, BLOBS_COUNT, 'blob');
 
+img_child = load_image('test_samples\sunflower3.png');
+
 [detected_centers detected_radiuses] = detect_blobs(img);
 
 draw_image(img)
