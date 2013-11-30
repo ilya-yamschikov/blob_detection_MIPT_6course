@@ -5,8 +5,8 @@ function [centers radiuses] = detect_blobs(image)
     MASK_SIZE = floor(floor(IMG_SIZE / 10) / 2) * 2 + 1;
     RESPONSE_THRESHOLD = -0.0;
     
-    %sigmas = 1:0.5:5;
-    sigmas = 5:2.5:30;
+    sigmas = 1:0.5:5;
+    %sigmas = 5:2.5:30;
     
     convolutions = cell(length(sigmas));
     centers = cell(0);
@@ -43,7 +43,8 @@ function [centers radiuses] = detect_blobs(image)
                 radiuses{blobs_found} = sigmas(idx);
             end
             
-            rate = sub2ind([IMG_SIZE(2) IMG_SIZE(1)], y, x) / (IMG_SIZE(1) * IMG_SIZE(2));
+            %rate = sub2ind([IMG_SIZE(2) IMG_SIZE(1)], y, x) / (IMG_SIZE(1) * IMG_SIZE(2));
+            rate = (y + x * IMG_SIZE(2)) / (IMG_SIZE(1) * IMG_SIZE(2));
             if (rate > next_debug)
                 disp(['progress: ' num2str(next_debug * 100) '%...']);
                 while (next_debug < rate)
