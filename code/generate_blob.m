@@ -10,9 +10,8 @@ function blob = generate_blob(center, sigma, IMG_SIZE)
     
     X_SIZE = IMG_SIZE(1);
     Y_SIZE = IMG_SIZE(2);
-    parfor x = 1:X_SIZE
-        for y = 1:Y_SIZE
-            blob(x,y) = exp(- 0.5 * ([x y] - center) / sigma * ([x y] - center)');
-        end
-    end
+    for x = 1:X_SIZE
+        vector = [repmat(x, Y_SIZE, 1) (1:Y_SIZE)'] - repmat(center, Y_SIZE, 1);
+        blob(x,:) = exp(- 0.5 * ((vector / sigma) .* vector) * ones(2, 1));
+    end 
 end
