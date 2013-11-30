@@ -1,4 +1,10 @@
-function draw_image(img)
+function draw_image(img, invert)
+    if nargin < 2
+        invert = false;
+    end
+    if invert 
+        img = max(img(:)) - img;
+    end
     imagesc(img);
     colormap(gray);
     colorbar;

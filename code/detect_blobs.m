@@ -5,6 +5,7 @@ function [centers radiuses] = detect_blobs(image)
     MASK_SIZE = floor(floor(IMG_SIZE / 10) / 2) * 2 + 1;
     RESPONSE_THRESHOLD = -0.0;
     
+    %sigmas = 1:0.5:5;
     sigmas = 5:2.5:30;
     
     convolutions = cell(length(sigmas));

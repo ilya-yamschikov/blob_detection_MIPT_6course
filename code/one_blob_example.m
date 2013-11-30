@@ -3,7 +3,7 @@ MASK_SIZE = 51;
 SIGMA_ORIGINAL = 15;
 
 sigmas = 3:0.25:19;
-image = generate_circle([floor(IMAGE_SIZE / 2) floor(IMAGE_SIZE / 2)], SIGMA_ORIGINAL, IMAGE_SIZE);
+image = generate_blob([floor(IMAGE_SIZE / 2) floor(IMAGE_SIZE / 2)], SIGMA_ORIGINAL, IMAGE_SIZE);
 
 mins = zeros(length(sigmas), 1);
 
@@ -19,19 +19,19 @@ end
 
 figure
 
-subplot(1,4,1)
+subplot(1,3,1)
 draw_image(image)
 
-subplot(1,4,2)
-plot(sigmas, mins, '-r');
-title('Min conviolution value')
-xlabel('Sigma of mask')
-ylabel('Min value')
+%subplot(1,4,2)
+%plot(sigmas, mins, '-r');
+%title('Min conviolution value')
+%xlabel('Sigma of mask')
+%ylabel('Min value')
 
-subplot(1,4,3)
+subplot(1,3,3)
 plot(res_of_real_sigma(floor(IMAGE_SIZE / 2), :), '-b');
 
-subplot(1,4,4)
+subplot(1,3,2)
 draw_image(res_of_real_sigma)
 
 total_min_value = min(mins);
