@@ -5,11 +5,13 @@ function [result_image centers radiuses] = generate_sample(mesh_size, blobs_coun
 
     BLOBS_COUNT = blobs_count;
     MESH_SIZE = mesh_size;
+    DEBUG_STEP = 0.1; % step in percent for debug output
 
     Z = zeros(MESH_SIZE, MESH_SIZE);
     centers = zeros(BLOBS_COUNT, 2);
     radiuses = cell(BLOBS_COUNT);
 
+    next_debug = DEBUG_STEP;
     for iteration = 1:BLOBS_COUNT
         intensity = random('unif', 0.99, 1);
         sigma = [random('unif', MESH_SIZE/100, MESH_SIZE/15) 0; 0 random('unif', MESH_SIZE/100, MESH_SIZE/15)];
@@ -23,6 +25,15 @@ function [result_image centers radiuses] = generate_sample(mesh_size, blobs_coun
         Z = Z + blob;
         centers(iteration, :) = center;
         radiuses{iteration} = sigma;
+        
+        % progress output
+        rate = iteration / BLOBS_COUNT;
+        if (rate > next_debug)
+            disp(['progress: ' num2str(next_debug * 100) '%...']);
+            while (next_debug < rate)
+                next_debug = next_debug + DEBUG_STEP; 
+            end
+        end
     end
 
     min_intensity = min(Z(:));

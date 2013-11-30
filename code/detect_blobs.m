@@ -21,7 +21,9 @@ function [centers radiuses] = detect_blobs(image)
         rate = i / length(sigmas);
         if (rate > next_debug)
             disp(['progress: ' num2str(next_debug * 100) '%...']);
-            next_debug = next_debug + DEBUG_STEP;
+            while (next_debug < rate)
+                next_debug = next_debug + DEBUG_STEP; 
+            end
         end
     end
     
@@ -44,7 +46,9 @@ function [centers radiuses] = detect_blobs(image)
             rate = sub2ind([IMG_SIZE(2) IMG_SIZE(1)], y, x) / (IMG_SIZE(1) * IMG_SIZE(2));
             if (rate > next_debug)
                 disp(['progress: ' num2str(next_debug * 100) '%...']);
-                next_debug = next_debug + DEBUG_STEP;
+                while (next_debug < rate)
+                    next_debug = next_debug + DEBUG_STEP; 
+                end
             end
         end
     end

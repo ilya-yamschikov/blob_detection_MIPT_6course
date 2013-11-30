@@ -8,8 +8,10 @@ function blob = generate_blob(center, sigma, IMG_SIZE)
 
     blob = zeros(IMG_SIZE(1), IMG_SIZE(2));
     
-    for x = 1:IMG_SIZE(1)
-        for y = 1:IMG_SIZE(2)
+    X_SIZE = IMG_SIZE(1);
+    Y_SIZE = IMG_SIZE(2);
+    parfor x = 1:X_SIZE
+        for y = 1:Y_SIZE
             blob(x,y) = exp(- 0.5 * ([x y] - center) / sigma * ([x y] - center)');
         end
     end
