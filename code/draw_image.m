@@ -11,7 +11,9 @@ function draw_image(img, invert, add_colorbar)
     end
     figure
     imagesc(img);
-    colormap(gray);
+    if (length(size(img)) < 3)
+        colormap(gray);
+    end
     if add_colorbar
         colorbar;
     end

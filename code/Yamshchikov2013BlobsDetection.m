@@ -12,7 +12,7 @@
 %|________________________________________________________________________________________________
 
 function [Matrix, Centers, Radiuses] = Yamshchikov2013BlobsDetection(Image, Blobs_sizes)
-    DEFAULT_BLOBS_SIZES = [1 5];
+    DEFAULT_BLOBS_SIZES = 1:0.25:5;
 
     if (nargin < 2)
         Blobs_sizes = DEFAULT_BLOBS_SIZES; 
