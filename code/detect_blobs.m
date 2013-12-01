@@ -1,16 +1,21 @@
-function [centers radiuses] = detect_blobs(image)
+function [centers, radiuses, matrix] = detect_blobs(image, blolbs_sizes)
+    if (nargin < 2)
+        blolbs_sizes = [1 5];
+    end
+
     DEBUG_STEP = 0.1;
+    SIGMA_SPLITS = 20;
 
     IMG_SIZE = size(image);
     MASK_SIZE = floor(floor(IMG_SIZE / 10) / 2) * 2 + 1;
     RESPONSE_THRESHOLD = -0.0;
     
-    sigmas = 1:0.5:5;
-    %sigmas = 5:2.5:30;
+    sigmas = blolbs_sizes(1):((blolbs_sizes(2) - blolbs_sizes(1)) / SIGMA_SPLITS):blolbs_sizes(2);
     
     convolutions = cell(length(sigmas));
     centers = cell(0);
     radiuses = cell(0);
+    matrix = zeros(size(image));
     blobs_found = 0;
     
     disp('Start convolutions calculation...');
@@ -41,9 +46,9 @@ function [centers radiuses] = detect_blobs(image)
                 blobs_found = blobs_found + 1;
                 centers{blobs_found} = [x y];
                 radiuses{blobs_found} = sigmas(idx);
+                matrix(x, y) = 1;
             end
             
-            %rate = sub2ind([IMG_SIZE(2) IMG_SIZE(1)], y, x) / (IMG_SIZE(1) * IMG_SIZE(2));
             rate = (y + x * IMG_SIZE(2)) / (IMG_SIZE(1) * IMG_SIZE(2));
             if (rate > next_debug)
                 disp(['progress: ' num2str(next_debug * 100) '%...']);
