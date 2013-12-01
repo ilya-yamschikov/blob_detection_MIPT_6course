@@ -42,6 +42,9 @@ function [centers, radiuses, matrix] = detect_blobs(image, blolbs_sizes)
             end
             
             [min_val, idx] = min(mins);
+            if ((idx == 1) || (idx == length(mins)))
+                continue;
+            end
             if is_local_minimum(convolutions{i}, [x y]) && (min_val < RESPONSE_THRESHOLD)
                 blobs_found = blobs_found + 1;
                 centers{blobs_found} = [x y];

@@ -1,8 +1,12 @@
-function [result_image centers radiuses] = generate_sample(mesh_size, blobs_count, type)
+function [result_image centers radiuses] = generate_sample(mesh_size, blobs_count, type, apply_noise)
     if ~(strcmp(type, 'blob') || strcmp(type, 'circle'))
         type = 'blob';
     end
+    if nargin < 4
+        apply_noise = false;
+    end
 
+    NOISE_INTENSITY = 0.1;
     BLOBS_COUNT = blobs_count;
     MESH_SIZE = mesh_size;
     DEBUG_STEP = 0.1; % step in percent for debug output
@@ -14,7 +18,7 @@ function [result_image centers radiuses] = generate_sample(mesh_size, blobs_coun
     next_debug = DEBUG_STEP;
     for iteration = 1:BLOBS_COUNT
         intensity = random('unif', 0.99, 1);
-        sigma = [random('unif', MESH_SIZE/100, MESH_SIZE/15) 0; 0 random('unif', MESH_SIZE/100, MESH_SIZE/15)];
+        sigma = [random('unif', MESH_SIZE/40, MESH_SIZE/15) 0; 0 random('unif', MESH_SIZE/40, MESH_SIZE/15)];
         center = random('unid', MESH_SIZE - 6 * floor(max(sigma(:))), 1, 2) + 3 * floor(max(sigma(:)));
         if strcmp(type, 'blob')
             blob = generate_blob(center, sigma, size(Z));
@@ -38,6 +42,12 @@ function [result_image centers radiuses] = generate_sample(mesh_size, blobs_coun
 
     min_intensity = min(Z(:));
     max_intensity = max(Z(:));
+    if apply_noise
+        noise = random('unif', min_intensity, min_intensity + NOISE_INTENSITY * (max_intensity - min_intensity), MESH_SIZE, MESH_SIZE);
+        Z = noise + Z;
+        min_intensity = min(Z(:));
+        max_intensity = max(Z(:));
+    end
     Z = (Z - min_intensity) / (max_intensity - min_intensity);
     
     result_image = Z;

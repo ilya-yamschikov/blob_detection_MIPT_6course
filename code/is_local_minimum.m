@@ -1,5 +1,5 @@
 function result = is_local_minimum(img, point)
-    LOCAL_AREA_SIZE = 1;
+    LOCAL_AREA_SIZE = 6;
 
     if (point(1) <= LOCAL_AREA_SIZE) || (point(1) >= (size(img, 1) + 1 - LOCAL_AREA_SIZE)) || (point(2) <= LOCAL_AREA_SIZE) || (point(2) >= (size(img, 2) + 1 - LOCAL_AREA_SIZE))
         result = false;
