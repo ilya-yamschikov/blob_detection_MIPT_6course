@@ -7,7 +7,7 @@ function [centers, radiuses, matrix] = detect_blobs(image, blolbs_sizes)
     SIGMA_SPLITS = 20;
 
     IMG_SIZE = size(image);
-    MASK_SIZE = floor(floor(IMG_SIZE / 10) / 2) * 2 + 1;
+    MASK_SIZE = min([4 * max(blolbs_sizes)^2, floor(floor(IMG_SIZE / 10) / 2) * 2 + 1]);
     RESPONSE_THRESHOLD = -0.0;
     
     sigmas = blolbs_sizes(1):((blolbs_sizes(2) - blolbs_sizes(1)) / SIGMA_SPLITS):blolbs_sizes(2);
