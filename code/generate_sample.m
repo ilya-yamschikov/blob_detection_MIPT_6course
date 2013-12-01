@@ -6,7 +6,7 @@ function [result_image centers radiuses] = generate_sample(mesh_size, blobs_coun
         apply_noise = false;
     end
 
-    NOISE_INTENSITY = 0.1;
+    NOISE_INTENSITY = 0.5;
     BLOBS_COUNT = blobs_count;
     MESH_SIZE = mesh_size;
     DEBUG_STEP = 0.1; % step in percent for debug output
