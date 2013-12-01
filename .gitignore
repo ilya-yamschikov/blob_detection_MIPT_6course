@@ -2,6 +2,6 @@
 *.bbl
 *.blg
 *.log
-*.synctec
+*.synctex
 *.bak
 *.sav
