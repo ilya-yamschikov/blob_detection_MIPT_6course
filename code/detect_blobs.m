@@ -12,8 +12,10 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
     convolutions = cell(length(sigmas));
     centers = cell(0);
     radiuses = cell(0);
+    blobs_brightness = cell(0);
     matrix = zeros(size(image));
     blobs_found = 0;
+    peak_brightness = 0;
     
     disp('Start convolutions calculation...');
     next_debug = DEBUG_STEP;
@@ -34,7 +36,6 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
         min_convolutions = min(min_convolutions, convolutions{i});
     end
     median_convolutions = median(min_convolutions(:));
-    min_convolutions = min(median_convolutions * ones(size(min_convolutions)), min_convolutions);
     
     disp('Start blobs finding...');
     next_debug = DEBUG_STEP;
@@ -49,16 +50,16 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
             [min_val, idx] = min(mins);
             if ((idx == 1) || (idx == length(mins)))
                 continue;
-            end
-                     
-            if (x == 462) && (y == 65)
-                ololo = 1;
-            end            
+            end         
             
             if is_local_minimum(min_convolutions, [x y]) && (min_val < RESPONSE_THRESHOLD)
                 blobs_found = blobs_found + 1;
                 centers{blobs_found} = [x y];
                 radiuses{blobs_found} = sigmas(idx);
+                blobs_brightness{blobs_found} = min_convolutions(x,y);
+                if blobs_brightness{blobs_found} < peak_brightness
+                    peak_brightness = blobs_brightness{blobs_found};
+                end
                 matrix(x, y) = 1;
             end
             
@@ -71,4 +72,21 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
             end
         end
     end
+    
+    disp(['median brightness = ' num2str(median_convolutions)]);
+    true_centers = cell(0);
+    true_radiuses = cell(0);
+    true_blobs = 0;
+    for i = 1:length(centers)
+        if blobs_brightness{i} < median_convolutions + 0.1 * (peak_brightness - median_convolutions);
+            true_blobs = true_blobs + 1;
+            true_centers{true_blobs} = centers{i};
+            true_radiuses{true_blobs} = radiuses{i};
+            disp(['Blob found: center [' num2str(centers{i}) '], radius = ' num2str(radiuses{i}) ', intensity = ' num2str(blobs_brightness{i})])
+        end
+    end
+    disp(['True blobs ratio = ' num2str(length(true_centers)/length(centers))]);
+    
+    centers = true_centers;
+    radiuses = true_radiuses;
 end

@@ -9,7 +9,7 @@ function draw_image(img, invert, add_colorbar)
     if invert 
         img = max(img(:)) - img;
     end
-    figure
+    %figure
     imagesc(img);
     if (length(size(img)) < 3)
         colormap(gray);
@@ -17,6 +17,7 @@ function draw_image(img, invert, add_colorbar)
     if add_colorbar
         colorbar;
     end
+    set(gcf,'color','w');
     axis([0 size(img,1) 0 size(img, 2)]);
-    %axis off
+    axis off
 end

@@ -18,7 +18,7 @@ function [result_image centers radiuses] = generate_sample(mesh_size, blobs_coun
     next_debug = DEBUG_STEP;
     for iteration = 1:BLOBS_COUNT
         intensity = random('unif', 0.99, 1);
-        sigma = [random('unif', MESH_SIZE/40, MESH_SIZE/15) 0; 0 random('unif', MESH_SIZE/40, MESH_SIZE/15)];
+        sigma = [random('unif', MESH_SIZE/40, MESH_SIZE/10) 0; 0 random('unif', MESH_SIZE/40, MESH_SIZE/10)];
         center = random('unid', MESH_SIZE - 6 * floor(max(sigma(:))), 1, 2) + 3 * floor(max(sigma(:)));
         if strcmp(type, 'blob')
             blob = generate_blob(center, sigma, size(Z));

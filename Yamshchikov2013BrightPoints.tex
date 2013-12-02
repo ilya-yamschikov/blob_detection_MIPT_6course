@@ -28,6 +28,7 @@
 \def\algorithmicforall{\textbf{для всех}}
 \def\algorithmicdo{}
 
+
 \begin{document}
 
 \section*{ Поиск светлых пятен}
@@ -37,17 +38,29 @@
 В данной задаче под изображением понимаем матрицу $Z = \{z_{ij}\}, i=1,\dots,\xs, j=1,\dots,\ys$ где $z_{ij} \in B$ - яркость пиксела.
 Здесь $B \in \mathbb{R}_+$ - возможные значения яркости. В компьютерной графике обычно $B = \{1,\dots,256\}$.
 
-\section{Интерфейс:} таким образом на вход алгоритм получает изображение $Z$, а на выход выдает множество эллипсов $\{\varepsilon_1,\dots,\varepsilon_k\}$ - светлых пятен изображения.
-
 \section{Алгоритм:}
 \subsection{Описание:}
 Алгоритм должен получать на вход изображение $Z$ и, возможно, набор параметров. На выходе требуется получить бинарную матрицу $R$ в которой единицам соответствуют центры найденных пятен.
+
 \begin{figure}[h]
-\caption{Пример работы алгоритма.}
+    \begin{center}
+        \begin{minipage}[h]{70mm}
+            \center{\includegraphics[width=75mm]{code/img/eg1_img1.png}}
+        \end{minipage}
+        \begin{minipage}[h]{70mm}
+            \center{\includegraphics[width=75mm]{code/img/eg1_result1.png}}
+        \end{minipage}
+        \caption{Пример работы алгоритма.}
+    \end{center}
 \end{figure}
 
 Для нахождения светлых пятен воспользуемся одним из самых известных алгоритмов в данной области LoG-детектор \cite{MarrHildreth80} (Laplacian-of-Gaussian).В этом алгоритме производится свертка изображения со второй производной гауссианы и затем на получившемся изображении ищутся локальные минимумы. Они будут соответствовать светлым пятнам на изображении.
 
+В предлагаемом алгоритме для поиска пятен различного размера вычисляется множество сверток изображения с масками с различным параметром. На всех свертках точки, соответствующие центрам ярких пятен, будут являться локальными минимумами. При этом минимальное значение яркости будет достигаться на свертке с маской с параметром равным радиусу светлого пятна.
+
+Для устойчивости к шуму предлагается искать локальные минимумы минимумы на изображении $\overline{conv}$, которое определяется как $\overline{conv}(i,j) = \min\limits_{k = 1,\ldots,\rc}(conv_k(i,j))$.
+
+А также среди найденных пятен отсекаются те, интенсивность которых близка к интенсивности шумов.
 \subsection{Алгоритм:}
 \textbf{Обозначения:}
 \begin{itemize}
@@ -65,21 +78,84 @@
 \REQUIRE $Z$, $\mathbf{r}$
 \ENSURE $R$
 \STATE $R \leftarrow 0^{\xs \times \ys}$
-\STATE \textit{// Создаем набор сверток с различными масками}
+\STATE \textit{// создаем набор сверток с различными масками}
 \FORALL{$r_{k}$ в $\mathbf{r}$}
     \STATE $conv_k \leftarrow Convolution(Z, \nabla\hat{G}(x, y, r_k))$
 \ENDFOR
-\STATE \textit{// Ищем центры ярких пятен}
+\STATE $\overline{conv} \leftarrow min(conv_1,\ldots,conv_{\rc})$
 \FORALL {$(i,j)$ в $[1,\ldots,\xs]\times[1,\ldots,\ys]$}
-    \STATE $k_{min conv} \leftarrow \argmin\limits_{k} conv_k(i,j)$
-    \IF {$(i,j)$ - точка локального минимума в $conv_{k_{min conv}}$}
+    \IF {$(i,j)$ - точка локального минимума в $\overline{conv}$}
         \STATE $R_{ij} \leftarrow 1$
+    \ENDIF
+\ENDFOR
+\STATE \textit{// отбрасываем шумовые пятна}
+\FORALL {(i,j) - центры пятен}
+    \IF {$\overline{conv}(i,j) > \text{median}(\overline{conv}) + 0.1(\max\limits_{(p,q) - blobs\_centers}\overline{conv}(p,q) - \text{median}(\overline{conv}))$}
+        \STATE $R(i,j) = 0$
     \ENDIF
 \ENDFOR
 \end{algorithmic}
 
-\section{Тестовые данные:} Для начальной проверки алгоритма (и юнит-тестов) предлагается сгенерировать ряд тестовых изображений. На черный фон добавляются несколько гауссовых пиков и полученное изображение зашумляется (опционально).
+\subsection{Пошаговые примеры:}
+Пошаговые иллюстрации работы алгоритма на примере изображения с одним ярким пятном в центре и шумом интенсивностью $0.3$ яркости пятна.
+\begin{enumerate}
 
+\item Изображение
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[width=80mm]{code/img/eg_step_by_step_1.png}
+    \end{center}
+    \caption{Исходное изображение}
+\end{figure}
+
+\item Затем вычисляются свертки изображения с масками с различными параметрами:
+
+\begin{figure}[h]
+    \begin{center}
+        \begin{minipage}[h]{50mm}
+            \center{\includegraphics[width=50mm]{code/img/eg_step_by_step_2_sigma_4.png} \\ $a)\; \sigma = 4.0$}
+        \end{minipage}
+        \begin{minipage}[h]{50mm}
+            \center{\includegraphics[width=50mm]{code/img/eg_step_by_step_2_sigma_6_5.png} \\ $b)\; \sigma = 6.5$}
+        \end{minipage}
+        \vfill
+        \begin{minipage}[h]{50mm}
+            \center{\includegraphics[width=50mm]{code/img/eg_step_by_step_2_sigma_7_75.png} \\ $c)\; \sigma = 7.75$}
+        \end{minipage}
+        \begin{minipage}[h]{50mm}
+            \center{\includegraphics[width=50mm]{code/img/eg_step_by_step_2_sigma_11_5.png} \\ $d)\; \sigma = 11.5$}
+        \end{minipage}
+        \caption{Свертки с различными масками.}
+    \end{center}
+\end{figure}
+
+\item Вычисляется изображение - $\overline{conv}(i,j) = \min\limits_{k = 1,\ldots,\rc}(conv_k(i,j))$.
+
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[width=80mm]{code/img/eg_step_by_step_3_minconv.png}
+    \end{center}
+    \caption{$\overline{conv}(i,j)$}
+\end{figure}
+
+\item Ищутся локальные минимумы на этом изображении. 
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[width=80mm]{code/img/eg_step_by_step_4_local_min.png}
+    \end{center}
+    \caption{Шумовые яркие пятна}
+\end{figure}
+
+\item Отфильтровываются шумовые пятна.
+\begin{figure}[h]
+    \begin{center}
+       \includegraphics[width=80mm]{code/img/eg_step_by_step_5_final.png}
+    \end{center}
+    \caption{$\overline{conv}(i,j)$}
+\end{figure}
+\end{enumerate}
+
+\newpage
 \begin{thebibliography}{9}
 \bibitem{MarrHildreth80} D. Marr and E.C. Hildreth. Theory of edge detection. Proc. Roy. Soc. London., B-207:187--217, 1980.
 \bibitem{MS04} Krystian Mikolajczyk and Cordelia Schmid, Scale and affine invariant interest point detectors,
