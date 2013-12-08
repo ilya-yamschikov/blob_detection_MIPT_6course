@@ -1,25 +1,33 @@
 function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
-    % Arguments check
+
+% Arguments check
     if (nargin < 2)
         sigmas = 1:0.25:5;
     end
 
-    % Constants
+% Constants
     DEBUG_STEP = 0.1;
     IMG_SIZE = size(image);
     MASK_SIZE = max(min([4 * max(sigmas)^2, floor(floor(IMG_SIZE / 10) / 2) * 2 + 1]), 31);
     
-    % Initialization
+% Initialization
+    centers = cell(0);
+    radiuses = cell(0);
+    blobs_brightness = cell(0);
     convolutions = cell(length(sigmas));
     matrix = zeros(size(image));
+    min_idx = zeros(IMG_SIZE);
     
-    % Calculate convolution
+% Calculate convolution
     disp('Start convolutions calculation...');
     next_debug = DEBUG_STEP;
     for i = 1:length(sigmas)
         convolutions{i} = conv2(image, get_mask(sigmas(i), MASK_SIZE), 'same');
         next_debug = log_progress(i, length(sigmas), next_debug, DEBUG_STEP);
     end
+    
+% Find blobs  
+    disp('Start blobs finding...');
     
     % Aggregate convolutions
     min_convolutions = convolutions{1};
@@ -28,25 +36,22 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
     end
     median_convolutions = median(min_convolutions(:));
     
-    % Find blobs
-    disp('Start blobs finding...');
+    %Get indexes of minimum values
+    for i = 1:length(sigmas)
+        min_idx = max(min_idx, i * (convolutions{i} == min_convolutions));
+    end
+    
+    % start main cycle
     next_debug = DEBUG_STEP;
     for x = 1:IMG_SIZE(1)
         for y = 1:IMG_SIZE(2)
-            
-            mins = zeros(length(sigmas), 1);
-            for i = 1:length(sigmas)
-                mins(i) = convolutions{i}(x, y);
-            end
-            
-            [min_val, idx] = min(mins);
-            if ((idx == 1) || (idx == length(mins)))
+            if ((min_idx(x,y) == 1) || (min_idx(x,y) == length(sigmas)))
                 continue;
             end         
             
             if is_local_minimum(min_convolutions, [x y])
                 centers{end+1} = [x y];
-                radiuses{end+1} = sigmas(idx);
+                radiuses{end+1} = sigmas(min_idx(x, y));
                 blobs_brightness{end+1} = min_convolutions(x,y);
                 matrix(x, y) = 1;
             end
