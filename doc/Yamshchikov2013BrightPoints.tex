@@ -2,6 +2,7 @@
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage[english, russian]{babel}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{subfigure}
 \usepackage{color}
 \usepackage{indentfirst}
@@ -45,10 +46,10 @@
 \begin{figure}[h]
     \begin{center}
         \begin{minipage}[h]{70mm}
-            \center{\includegraphics[width=75mm]{code/img/eg1_img1.png}}
+            \center{\includegraphics[width=75mm]{Yamshchikov2013Images/eg1_img1.png}}
         \end{minipage}
         \begin{minipage}[h]{70mm}
-            \center{\includegraphics[width=75mm]{code/img/eg1_result1.png}}
+            \center{\includegraphics[width=75mm]{Yamshchikov2013Images/eg1_result1.png}}
         \end{minipage}
         \caption{Пример работы алгоритма.}
     \end{center}
@@ -101,29 +102,29 @@
 \begin{enumerate}
 
 \item Изображение
-\begin{figure}[h]
+\begin{figure}[H]
     \begin{center}
-       \includegraphics[width=80mm]{code/img/eg_step_by_step_1.png}
+       \includegraphics[width=80mm]{Yamshchikov2013Images/eg_step_by_step_1.png}
     \end{center}
     \caption{Исходное изображение}
 \end{figure}
 
 \item Затем вычисляются свертки изображения с масками с различными параметрами:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \begin{center}
         \begin{minipage}[h]{50mm}
-            \center{\includegraphics[width=50mm]{code/img/eg_step_by_step_2_sigma_4.png} \\ $a)\; \sigma = 4.0$}
+            \center{\includegraphics[width=50mm]{Yamshchikov2013Images/eg_step_by_step_2_sigma_4.png} \\ $a)\; \sigma = 4.0$}
         \end{minipage}
         \begin{minipage}[h]{50mm}
-            \center{\includegraphics[width=50mm]{code/img/eg_step_by_step_2_sigma_6_5.png} \\ $b)\; \sigma = 6.5$}
+            \center{\includegraphics[width=50mm]{Yamshchikov2013Images/eg_step_by_step_2_sigma_6_5.png} \\ $b)\; \sigma = 6.5$}
         \end{minipage}
         \vfill
         \begin{minipage}[h]{50mm}
-            \center{\includegraphics[width=50mm]{code/img/eg_step_by_step_2_sigma_7_75.png} \\ $c)\; \sigma = 7.75$}
+            \center{\includegraphics[width=50mm]{Yamshchikov2013Images/eg_step_by_step_2_sigma_7_75.png} \\ $c)\; \sigma = 7.75$}
         \end{minipage}
         \begin{minipage}[h]{50mm}
-            \center{\includegraphics[width=50mm]{code/img/eg_step_by_step_2_sigma_11_5.png} \\ $d)\; \sigma = 11.5$}
+            \center{\includegraphics[width=50mm]{Yamshchikov2013Images/eg_step_by_step_2_sigma_11_5.png} \\ $d)\; \sigma = 11.5$}
         \end{minipage}
         \caption{Свертки с различными масками.}
     \end{center}
@@ -131,25 +132,25 @@
 
 \item Вычисляется изображение - $\overline{conv}(i,j) = \min\limits_{k = 1,\ldots,\rc}(conv_k(i,j))$.
 
-\begin{figure}[h]
+\begin{figure}[H]
     \begin{center}
-       \includegraphics[width=80mm]{code/img/eg_step_by_step_3_minconv.png}
+       \includegraphics[width=80mm]{Yamshchikov2013Images/eg_step_by_step_3_minconv.png}
     \end{center}
     \caption{$\overline{conv}(i,j)$}
 \end{figure}
 
-\item Ищутся локальные минимумы на этом изображении. 
-\begin{figure}[h]
+\item Ищутся локальные минимумы на этом изображении.
+\begin{figure}[H]
     \begin{center}
-       \includegraphics[width=80mm]{code/img/eg_step_by_step_4_local_min.png}
+       \includegraphics[width=80mm]{Yamshchikov2013Images/eg_step_by_step_4_local_min.png}
     \end{center}
     \caption{Шумовые яркие пятна}
 \end{figure}
 
 \item Отфильтровываются шумовые пятна.
-\begin{figure}[h]
+\begin{figure}[H]
     \begin{center}
-       \includegraphics[width=80mm]{code/img/eg_step_by_step_5_final.png}
+       \includegraphics[width=80mm]{Yamshchikov2013Images/eg_step_by_step_5_final.png}
     \end{center}
     \caption{$\overline{conv}(i,j)$}
 \end{figure}
