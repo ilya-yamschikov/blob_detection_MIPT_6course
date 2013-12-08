@@ -3,7 +3,7 @@ function [centers, radiuses, matrix] = filter_blobs(blobs_brightness, median_con
     radiuses = cell(0);
     matrix = zeros(IMG_SIZE);
     blobs_count = 0;
-    peak_brightness = max(cell2mat(blobs_brightness));
+    peak_brightness = min(cell2mat(blobs_brightness));
     
     for i = 1:length(in_centers)
         if blobs_brightness{i} < median_convolutions + 0.1 * (peak_brightness - median_convolutions);

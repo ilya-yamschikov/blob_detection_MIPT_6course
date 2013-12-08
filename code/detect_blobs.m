@@ -17,7 +17,6 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
     blobs_brightness = cell(0);
     matrix = zeros(size(image));
     blobs_found = 0;
-    peak_brightness = 0;
     
     % Calculate convolution
     disp('Start convolutions calculation...');
@@ -55,7 +54,6 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
                 centers{blobs_found} = [x y];
                 radiuses{blobs_found} = sigmas(idx);
                 blobs_brightness{blobs_found} = min_convolutions(x,y);
-                peak_brightness = min(peak_brightness, blobs_brightness{blobs_found});
                 matrix(x, y) = 1;
             end
 
