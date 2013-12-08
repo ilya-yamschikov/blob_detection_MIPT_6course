@@ -1,10 +1,10 @@
 function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
-    % arguments check
+    % Arguments check
     if (nargin < 2)
         sigmas = 1:0.25:5;
     end
 
-    % constants
+    % Constants
     DEBUG_STEP = 0.1;
     IMG_SIZE = size(image);
     MASK_SIZE = max(min([4 * max(sigmas)^2, floor(floor(IMG_SIZE / 10) / 2) * 2 + 1]), 31);
@@ -19,21 +19,22 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
     blobs_found = 0;
     peak_brightness = 0;
     
+    % Calculate convolution
     disp('Start convolutions calculation...');
     next_debug = DEBUG_STEP;
     for i = 1:length(sigmas)
-        mask = get_mask(sigmas(i), MASK_SIZE);
-        convolutions{i} = conv2(image, mask, 'same');
-        
+        convolutions{i} = conv2(image, get_mask(sigmas(i), MASK_SIZE), 'same');
         next_debug = log_progress(i, length(sigmas), next_debug, DEBUG_STEP);
     end
     
+    % Aggregate convolutions
     min_convolutions = convolutions{1};
     for i = 2:length(sigmas)
         min_convolutions = min(min_convolutions, convolutions{i});
     end
     median_convolutions = median(min_convolutions(:));
     
+    % Find blobs
     disp('Start blobs finding...');
     next_debug = DEBUG_STEP;
     for x = 1:IMG_SIZE(1)
@@ -54,9 +55,7 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
                 centers{blobs_found} = [x y];
                 radiuses{blobs_found} = sigmas(idx);
                 blobs_brightness{blobs_found} = min_convolutions(x,y);
-                if blobs_brightness{blobs_found} < peak_brightness
-                    peak_brightness = blobs_brightness{blobs_found};
-                end
+                peak_brightness = min(peak_brightness, blobs_brightness{blobs_found});
                 matrix(x, y) = 1;
             end
 
