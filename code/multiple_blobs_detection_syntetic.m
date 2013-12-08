@@ -4,11 +4,11 @@ BLOBS_COUNT = 100;
 %start benchmark
 tStart = tic;
 
-%[img centers radiuses] = generate_sample(IMAGE_SIZE, BLOBS_COUNT, 'blob');
+[img, centers, radiuses] = generate_sample(IMAGE_SIZE, BLOBS_COUNT, 'blob');
 
 %img = load_image('test_samples\sunflower.png', true);
 
-[detected_centers detected_radiuses] = detect_blobs(img, 1:0.25:10);
+[detected_centers, detected_radiuses] = detect_blobs(img, 1:0.25:10);
 
 draw_image(img, true)
 hold on
