@@ -30,14 +30,7 @@ function [result_image centers radiuses] = generate_sample(mesh_size, blobs_coun
         centers(iteration, :) = center;
         radiuses{iteration} = sigma;
         
-        % progress output
-        rate = iteration / BLOBS_COUNT;
-        if (rate > next_debug)
-            disp(['progress: ' num2str(next_debug * 100) '%...']);
-            while (next_debug < rate)
-                next_debug = next_debug + DEBUG_STEP; 
-            end
-        end
+        next_debug = log_progress(iteration, BLOBS_COUNT, next_debug, DEBUG_STEP);
     end
 
     min_intensity = min(Z(:));

@@ -8,7 +8,7 @@ tStart = tic;
 
 %img = load_image('test_samples\sunflower.png', true);
 
-[detected_centers detected_radiuses] = detect_blobs(img);
+[detected_centers detected_radiuses] = detect_blobs(img, 1:0.25:10);
 
 draw_image(img, true)
 hold on

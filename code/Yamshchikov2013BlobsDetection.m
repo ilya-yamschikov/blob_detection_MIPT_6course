@@ -6,8 +6,8 @@
 %|       should be 2D array with size > 16px on both dimentions
 %|       Array element represent the intensity of pixel. 
 %| 2) Blobs_sizes (optional parameter) - specifies the range of bolobs sizes
-%|       for search. Shold be 2D array - [min_size max_size]
-%|       If it's not specified, then default value [1 5] will be used
+%|       for search. Shold be 2D array - [size_1, size_2, ... , size_n]
+%|       If it's not specified, then default value 1:0.25:5 will be used
 %|       Limits: min_size should be > 1,  max_size < then image size (on both dimentions)        
 %|________________________________________________________________________________________________
 

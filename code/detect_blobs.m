@@ -1,14 +1,16 @@
 function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
+    % arguments check
     if (nargin < 2)
         sigmas = 1:0.25:5;
     end
 
+    % constants
     DEBUG_STEP = 0.1;
-
     IMG_SIZE = size(image);
     MASK_SIZE = max(min([4 * max(sigmas)^2, floor(floor(IMG_SIZE / 10) / 2) * 2 + 1]), 31);
     RESPONSE_THRESHOLD = -0.0;
     
+    % Initialization
     convolutions = cell(length(sigmas));
     centers = cell(0);
     radiuses = cell(0);
@@ -22,13 +24,8 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
     for i = 1:length(sigmas)
         mask = get_mask(sigmas(i), MASK_SIZE);
         convolutions{i} = conv2(image, mask, 'same');
-        rate = i / length(sigmas);
-        if (rate > next_debug)
-            disp(['progress: ' num2str(next_debug * 100) '%...']);
-            while (next_debug < rate)
-                next_debug = next_debug + DEBUG_STEP; 
-            end
-        end
+        
+        next_debug = log_progress(i, length(sigmas), next_debug, DEBUG_STEP);
     end
     
     min_convolutions = convolutions{1};
@@ -62,14 +59,8 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
                 end
                 matrix(x, y) = 1;
             end
-            
-            rate = (y + x * IMG_SIZE(2)) / (IMG_SIZE(1) * IMG_SIZE(2));
-            if (rate > next_debug)
-                disp(['progress: ' num2str(next_debug * 100) '%...']);
-                while (next_debug < rate)
-                    next_debug = next_debug + DEBUG_STEP; 
-                end
-            end
+
+            next_debug = log_progress(y + x * IMG_SIZE(2), IMG_SIZE(1) * IMG_SIZE(2), next_debug, DEBUG_STEP);
         end
     end
     
