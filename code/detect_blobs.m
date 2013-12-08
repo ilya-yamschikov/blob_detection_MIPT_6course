@@ -8,15 +8,10 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
     DEBUG_STEP = 0.1;
     IMG_SIZE = size(image);
     MASK_SIZE = max(min([4 * max(sigmas)^2, floor(floor(IMG_SIZE / 10) / 2) * 2 + 1]), 31);
-    RESPONSE_THRESHOLD = -0.0;
     
     % Initialization
     convolutions = cell(length(sigmas));
-    centers = cell(0);
-    radiuses = cell(0);
-    blobs_brightness = cell(0);
     matrix = zeros(size(image));
-    blobs_found = 0;
     
     % Calculate convolution
     disp('Start convolutions calculation...');
@@ -49,11 +44,10 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
                 continue;
             end         
             
-            if is_local_minimum(min_convolutions, [x y]) && (min_val < RESPONSE_THRESHOLD)
-                blobs_found = blobs_found + 1;
-                centers{blobs_found} = [x y];
-                radiuses{blobs_found} = sigmas(idx);
-                blobs_brightness{blobs_found} = min_convolutions(x,y);
+            if is_local_minimum(min_convolutions, [x y])
+                centers{end+1} = [x y];
+                radiuses{end+1} = sigmas(idx);
+                blobs_brightness{end+1} = min_convolutions(x,y);
                 matrix(x, y) = 1;
             end
 
