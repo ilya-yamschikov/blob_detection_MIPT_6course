@@ -18,7 +18,7 @@ function [Matrix, Centers, Radiuses] = Yamshchikov2013BlobsDetection(Image, Blob
         Blobs_sizes = DEFAULT_BLOBS_SIZES; 
     end
 
-    if (length(size(Blobs_sizes)) > 2) || (((size(Blobs_sizes, 1) ~= 1) || (size(Blobs_sizes, 2) ~= 2)) && ((size(Blobs_sizes, 1) ~= 2) || (size(Blobs_sizes, 2) ~= 1)))
+    if (length(size(Blobs_sizes)) > 2)
         disp(['Wrong input! blobs sizes to find set wrong: blolbs_sizes = [' num2str(Blobs_sizes) '], continue with [' num2str(DEFAULT_BLOBS_SIZES) ']']);
         Blobs_sizes = DEFAULT_BLOBS_SIZES;
     end

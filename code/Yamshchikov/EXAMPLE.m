@@ -1,16 +1,15 @@
+addpath('..\..\tests_data\Yamshchikov')
+
 IMAGE_SIZE = 512;
 BLOBS_COUNT = 100;
 
-%start benchmark
 tStart = tic;
 
 [img, centers, radiuses] = generate_sample(IMAGE_SIZE, BLOBS_COUNT, 'blob');
 
-%img = load_image('test_samples\sunflower.png', true);
+[matrix, detected_centers, detected_radiuses] = Yamshchikov2013BlobsDetection(img, 1:0.25:20);
 
-[detected_centers, detected_radiuses] = detect_blobs(img, 1:0.25:10);
-
-draw_image(img, true)
+draw_image(img, false)
 hold on
 for i = 1:length(detected_centers)
     plot(detected_centers{i}(2),detected_centers{i}(1), 'ro', 'MarkerSize',detected_radiuses{i}*4, 'LineStyle', 'none'); 
