@@ -10,7 +10,7 @@ function [centers, radiuses, matrix] = filter_blobs(blobs_brightness, median_con
         if blobs_brightness{i} < median_convolutions + THRESHOLD * (peak_brightness - median_convolutions);
             centers{end+1} = in_centers{i};
             radiuses{end+1} = in_radiuses{i};
-            matrix(centers{i}(1), centers{i}(2)) = 1;
+            matrix(in_centers{i}(1), in_centers{i}(2)) = 1;
         end
     end
 end

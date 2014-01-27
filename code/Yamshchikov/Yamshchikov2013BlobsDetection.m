@@ -7,12 +7,12 @@
 %|       Array element represent the intensity of pixel. 
 %| 2) Blobs_sizes (optional parameter) - specifies the range of bolobs sizes
 %|       for search. Shold be 2D array - [size_1, size_2, ... , size_n]
-%|       If it's not specified, then default value 1:0.25:5 will be used
+%|       If it's not specified, then default value 2:0.5:10 will be used
 %|       Limits: min_size should be > 1,  max_size < then image size (on both dimentions)        
 %|________________________________________________________________________________________________
 
 function [Matrix, Centers, Radiuses] = Yamshchikov2013BlobsDetection(Image, Blobs_sizes)
-    DEFAULT_BLOBS_SIZES = 1:0.25:5;
+    DEFAULT_BLOBS_SIZES = 2:0.5:10;
 
     if (nargin < 2)
         Blobs_sizes = DEFAULT_BLOBS_SIZES; 

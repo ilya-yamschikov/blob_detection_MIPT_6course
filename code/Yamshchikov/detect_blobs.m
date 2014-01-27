@@ -8,13 +8,12 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
 % Constants
     DEBUG_STEP = 0.1;
     IMG_SIZE = size(image);
-    MASK_SIZE = max(min([4 * max(sigmas)^2, floor(floor(IMG_SIZE / 10) / 2) * 2 + 1]), 31);
     
 % Initialization
     centers = cell(0);
     radiuses = cell(0);
     blobs_brightness = cell(0);
-    convolutions = cell(length(sigmas));
+    convolutions = cell(length(sigmas), 1);
     matrix = zeros(size(image));
     min_idx = zeros(IMG_SIZE);
     
@@ -22,7 +21,7 @@ function [centers, radiuses, matrix] = detect_blobs(image, sigmas)
     disp('Start convolutions calculation...');
     next_debug = DEBUG_STEP;
     for i = 1:length(sigmas)
-        convolutions{i} = conv2(image, get_mask(sigmas(i), MASK_SIZE), 'same');
+        convolutions{i} = conv2(image, get_mask(sigmas(i)), 'same');
         next_debug = log_progress(i, length(sigmas), next_debug, DEBUG_STEP);
     end
     

@@ -1,5 +1,3 @@
-addpath('..\..\tests_data\Yamshchikov')
-
 IMAGE_SIZE = 512;
 BLOBS_COUNT = 100;
 
